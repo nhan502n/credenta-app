@@ -1,0 +1,71 @@
+name: frontend
+description: A new Flutter project.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+############################
+# Runtime dependencies
+############################
+dependencies:
+  animations: ^2.0.8
+  http: ^1.2.1
+  flutter:
+    sdk: flutter
+  # Gỡ nếu không dùng Cupertino
+  cupertino_icons: ^1.0.8
+
+############################
+# Dev / tooling
+############################
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0     # Bộ lint mới, hợp Dart 3.x
+
+  # (Tuỳ chọn) Bật khi cần, rồi chạy: flutter pub run flutter_launcher_icons
+  # flutter_launcher_icons: ^0.13.1
+  # (Tuỳ chọn) Bật khi cần, rồi chạy: dart run flutter_native_splash:create
+  # flutter_native_splash: ^2.4.1
+
+############################
+# Flutter config
+############################
+flutter:
+  uses-material-design: true
+  
+
+  # Khai báo asset khi cần (giữ folder rỗng cũng OK)
+  assets:
+    - assets/images/logo.png
+
+  # Khai báo font custom khi cần
+  # fonts:
+  #   - family: Inter
+  #     fonts:
+  #       - asset: assets/fonts/Inter-Regular.ttf
+  #       - asset: assets/fonts/Inter-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Inter-SemiBold.ttf
+  #         weight: 600
+
+# ==========================
+# Tooling presets (tuỳ chọn)
+# Bỏ comment nếu dùng các plugin ở trên
+# ==========================
+
+# flutter_launcher_icons:
+#   android: true
+#   ios: true
+#   image_path: assets/icons/app_icon.png
+#   adaptive_icon_background: "#121418"
+#   adaptive_icon_foreground: assets/icons/app_icon_adaptive.png
+
+# flutter_native_splash:
+#   color: "#121418"
+#   image: assets/icons/splash_logo.png
+#   android_12:
+#     color: "#121418"
+#     image: assets/icons/splash_logo_android12.png
