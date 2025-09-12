@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // để tắt debug paints
-import 'package:frontend/pages/phone_verify_page.dart';
+import 'package:frontend/pages/login/phone_verify_page.dart';
 import 'theme/app_theme.dart';
-import 'pages/landing_page.dart';
-import 'pages/signup_page.dart';
-import 'pages/login_page.dart';
+import 'pages/home/landing_page.dart';
+import 'pages/signup/signup_page.dart';
+import 'pages/login/login_page.dart';
 
 void main() {
   // TẮT mọi debug paint / baseline / pointer / repaint rainbow

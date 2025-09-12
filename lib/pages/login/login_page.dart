@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_layout.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_layout.dart';
 import 'package:animations/animations.dart';           // 👈 hiệu ứng FadeThrough
 import 'phone_verify_page.dart';   
 
@@ -45,65 +45,68 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  double _fieldHeight(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final candidate = w * 0.09; // ~9% width
-    return candidate.clamp(30.0, 36.0);
-  }
-
   InputDecoration _decoration(
-    String hint,
-    double fieldH, {
-    bool isPassword = false,
-    TextEditingController? controller,
-  }) {
-    const borderW = 1.2;
-    final double vPad = ((fieldH - 18) / 2).clamp(5.0, 10.0);
+  String hint,
+  double fieldH, {
+  bool isPassword = false,
+  TextEditingController? controller,
+}) {
+  const borderW = 1.2;
 
-    return InputDecoration(
-      isDense: true,
-      hintText: hint,
-      hintStyle: const TextStyle(color: AppColors.placeholder, fontSize: 14),
-      filled: true,
-      fillColor: AppColors.inputFill50,
-      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: vPad),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppColors.inputRadius),
-        borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppColors.inputRadius),
-        borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppColors.inputRadius),
-        borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppColors.inputRadius),
-        borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
-      ),
-      errorStyle: const TextStyle(fontSize: 0, height: 0),
-      suffixIconConstraints: BoxConstraints.tightFor(width: fieldH, height: fieldH),
-      suffixIcon: isPassword
-          ? IconButton(
-              padding: EdgeInsets.zero,
-              icon: Icon(
-                showPass ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                size: 18,
-                color: AppColors.brandOrange,
-              ),
-              onPressed: () => setState(() => showPass = !showPass),
-            )
-          : (controller != null && controller.text.isNotEmpty)
-              ? IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.close_outlined, size: 18, color: AppColors.clearX),
-                  onPressed: () { controller.clear(); setState(() {}); },
-                )
-              : const SizedBox.shrink(),
-    );
-  }
+  // Đừng kẹp trần 10 nữa, cho nó theo fieldH
+  final double vPad = ((fieldH - 18) / 2).clamp(6.0, fieldH / 2);
+
+  return InputDecoration(
+    // isDense: true, // ❌ bỏ để không bị ép mảnh
+    isDense: false,   // ✅ cho phép cao hơn
+    // Ép chiều cao theo fieldH bằng constraints của InputDecoration
+    constraints: BoxConstraints.tightFor(height: fieldH),
+
+    hintText: hint,
+    hintStyle: const TextStyle(color: AppColors.placeholder, fontSize: 14),
+    filled: true,
+    fillColor: AppColors.inputFill50,
+    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: vPad),
+
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppColors.inputRadius),
+      borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppColors.inputRadius),
+      borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppColors.inputRadius),
+      borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppColors.inputRadius),
+      borderSide: const BorderSide(color: AppColors.brandOrange, width: borderW),
+    ),
+    errorStyle: const TextStyle(fontSize: 0, height: 0),
+
+    suffixIconConstraints: BoxConstraints.tightFor(width: fieldH, height: fieldH),
+    suffixIcon: isPassword
+        ? IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              showPass ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+              size: 18,
+              color: AppColors.brandOrange,
+            ),
+            onPressed: () => setState(() => showPass = !showPass),
+          )
+        : (controller != null && controller.text.isNotEmpty)
+            ? IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.close_outlined, size: 18, color: AppColors.clearX),
+                onPressed: () { controller.clear(); setState(() {}); },
+              )
+            : const SizedBox.shrink(),
+  );
+}
+
 
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 6),
@@ -123,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (v) => validator?.call(controller.text),
       builder: (state) {
-        final fieldH = _fieldHeight(context);
+        final fieldH = AppLayout.fieldHeight(context);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

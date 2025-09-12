@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_layout.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_layout.dart';
 
 class VerifyEmailPage extends StatelessWidget {
   final String email; // truyền email để hiển thị

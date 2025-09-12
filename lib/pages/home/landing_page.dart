@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../components/logo_badge.dart';
-import '../theme/app_layout.dart';
-import '../theme/app_colors.dart';
+import '../../components/logo_badge.dart';
+import '../../theme/app_layout.dart';
+import '../../theme/app_colors.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});

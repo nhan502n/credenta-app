@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import 'package:frontend/pages/country_code_picker_page.dart';
-import 'package:frontend/pages/phone_otp_page.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_layout.dart';
-import '../services/country_service.dart'
+import 'package:frontend/pages/login/country_code_picker_page.dart';
+import 'package:frontend/pages/login/phone_otp_page.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_layout.dart';
+import '../../services/country_service.dart'
     show CountryDial, flagEmoji, prefetchCountryDials, fetchCountryDialsCached;
 
 class PhoneVerifyPage extends StatefulWidget {
@@ -49,11 +49,6 @@ class _PhoneVerifyPageState extends State<PhoneVerifyPage> {
         ),
       );
 
-  double _fieldHeight(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final candidate = w * 0.09; // ~9% width
-    return candidate.clamp(30.0, 36.0);
-  }
 
   InputDecoration _decoration(
     String hint,
@@ -147,7 +142,8 @@ class _PhoneVerifyPageState extends State<PhoneVerifyPage> {
   @override
   Widget build(BuildContext context) {
     final isNarrow = MediaQuery.of(context).size.width < 380;
-    final h = _fieldHeight(context);
+    final fieldH = AppLayout.fieldHeight(context);
+
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -183,9 +179,9 @@ class _PhoneVerifyPageState extends State<PhoneVerifyPage> {
                         Row(
                           children: [
                             SizedBox(
-                              height: h,
+                              height: fieldH,
                               child: _CountryCodeButton(
-                                height: h,
+                                height: fieldH,
                                 dial: _selected.dial,
                                 flag: flagEmoji(_selected.cca2),
                                 onTap: _openCountryPicker,
@@ -194,7 +190,7 @@ class _PhoneVerifyPageState extends State<PhoneVerifyPage> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: SizedBox(
-                                height: h,
+                                height: fieldH,
                                 child: TextFormField(
                                   controller: phoneCtrl,
                                   keyboardType: TextInputType.phone,
@@ -206,7 +202,7 @@ class _PhoneVerifyPageState extends State<PhoneVerifyPage> {
                                       forceStrutHeight: true,
                                       height: 1,
                                       fontSize: 14),
-                                  decoration: _decoration('Your mobile number', h,
+                                  decoration: _decoration('Your mobile number', fieldH,
                                       controller: phoneCtrl),
                                   validator: (v) {
                                     final t =

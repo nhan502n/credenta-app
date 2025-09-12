@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_layout.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_layout.dart';
 
 class PhoneOtpPage extends StatefulWidget {
-  final String phoneDisplay; // text hiện ở dòng mô tả
+  final String phoneDisplay; // text shown in the description line
   const PhoneOtpPage({super.key, this.phoneDisplay = '+0123456789'});
 
   @override
@@ -15,6 +15,8 @@ class PhoneOtpPage extends StatefulWidget {
 class _PhoneOtpPageState extends State<PhoneOtpPage> {
   // ===== OTP state =====
   static const int _len = 6;
+  static const String _mockOtp = '111111'; // <-- MOCK OTP
+
   final _nodes =
       List<FocusNode>.generate(_len, (_) => FocusNode(debugLabel: 'otp'));
   final _ctrs =
@@ -25,9 +27,10 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
   int _left = _resendSeconds;
   Timer? _t;
 
-  // status line (xanh khi verified)
+  // status line (green when verified / red when invalid)
   String? _statusText;
   Color _statusColor = Colors.green;
+  bool _isError = false; // toggle red border when OTP is invalid
 
   @override
   void initState() {
@@ -67,7 +70,11 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
         _ctrs[i - 1].selection =
             TextSelection.collapsed(offset: _ctrs[i - 1].text.length);
       }
-      setState(() => _ctrs[i].text = '');
+      setState(() {
+        _ctrs[i].text = '';
+        _isError = false; // reset error when user edits
+        _statusText = null;
+      });
       return;
     }
 
@@ -92,7 +99,11 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
       }
     }
 
-    setState(() {});
+    setState(() {
+      _isError = false; // reset error on change
+      _statusText = null;
+    });
+
     if (_code.length == _len && !_code.contains(RegExp(r'[^0-9]'))) {
       _verify();
     }
@@ -100,14 +111,24 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
 
   Future<void> _verify() async {
     FocusScope.of(context).unfocus();
-    setState(() {
-      _statusText = 'OTP verified successfully';
-      _statusColor = Colors.green;
-    });
 
-    await Future.delayed(const Duration(milliseconds: 600));
-    if (!mounted) return;
-    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    if (_code == _mockOtp) {
+      setState(() {
+        _statusText = 'OTP verified successfully';
+        _statusColor = Colors.green;
+        _isError = false;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    } else {
+      setState(() {
+        _statusText = 'Invalid verification code. Please try again.';
+        _statusColor = Colors.red;
+        _isError = true;
+      });
+    }
   }
 
   void _clearAll() {
@@ -115,6 +136,7 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
     _nodes.first.requestFocus();
     setState(() {
       _statusText = null;
+      _isError = false;
     });
   }
 
@@ -131,7 +153,7 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
       backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Padding(
-          // ✅ dùng AppLayout cho padding tổng
+          // use AppLayout for global padding
           padding: AppLayout.pagePadding,
           child: SingleChildScrollView(
             child: Column(
@@ -147,12 +169,15 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
                       color: AppColors.backCircle,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.arrow_back,
-                        color: AppColors.brandOrange, size: 20),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: AppColors.brandOrange,
+                      size: 20,
+                    ),
                   ),
                 ),
 
-                // ✅ dùng khoảng cách chung
+                // spacing
                 AppLayout.gapLG,
 
                 const Text(
@@ -173,15 +198,17 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
 
                 AppLayout.gapMD,
 
-                // ===== OTP grid giữ công thức 39x50 (scale) & khoảng trống giữa gấp đôi =====
+                // ===== OTP grid (keeps 39x50 baseline, scales) & double space after 3rd cell =====
                 LayoutBuilder(
                   builder: (_, cons) {
-                    // Baseline (màn 393 × 852)
+                    // Baseline (393 × 852)
                     const double baseW = 39.0;
                     const double baseH = 50.0;
                     const double baseGap = 12.0;
 
-                    // Tổng ngang baseline (khoảng giữa gấp đôi): 6*(w+gap) = 306
+                    // Total width baseline with double gap after idx==2:
+                    // 6*(w) + 5*(gap) + 1*(extra gap) = 6*39 + 6*12 - (remove last gap) + extra
+                    // For simplicity, we keep the provided constant:
                     const double totalBase = 306.0;
 
                     double scale = cons.maxWidth / totalBase;
@@ -207,6 +234,7 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
                           fontSize: font,
                           radius: radius,
                           stroke: stroke,
+                          isError: _isError, // propagate error state
                         ),
                       ));
                       if (idx < _len - 1) {
@@ -264,10 +292,11 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
   }
 }
 
-/*  Ô OTP:
-    - Không viền khi trống & không focus
-    - Có viền khi focus hoặc đã nhập
-    - Khi focus ẩn placeholder '–'
+/*  OTP Cell:
+    - No border when empty & not focused
+    - Has border when focused or filled
+    - Hide placeholder '–' when focused/filled
+    - Show red border when page in error state
 */
 class _OtpCell extends StatefulWidget {
   final TextEditingController controller;
@@ -276,6 +305,7 @@ class _OtpCell extends StatefulWidget {
   final double fontSize;
   final double radius;
   final double stroke;
+  final bool isError;
 
   const _OtpCell({
     required this.controller,
@@ -284,6 +314,7 @@ class _OtpCell extends StatefulWidget {
     required this.fontSize,
     required this.radius,
     required this.stroke,
+    this.isError = false,
   });
 
   @override
@@ -328,13 +359,18 @@ class _OtpCellState extends State<_OtpCell> {
     final hasText = widget.controller.text.isNotEmpty;
     final active = hasFocus || hasText;
 
+    final borderColor =
+        widget.isError ? Colors.red : AppColors.brandOrange;
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.inputFill50,
         borderRadius: BorderRadius.circular(widget.radius),
         border: active
-            ? Border.all(color: AppColors.brandOrange, width: widget.stroke)
-            : null,
+            ? Border.all(color: borderColor, width: widget.stroke)
+            : (widget.isError
+                ? Border.all(color: borderColor, width: widget.stroke)
+                : null),
       ),
       child: Center(
         child: TextField(
@@ -365,7 +401,7 @@ class _OtpCellState extends State<_OtpCell> {
             isDense: true,
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
-            hintText: active ? null : '–', // ẩn gạch ngang khi focus/đã nhập
+            hintText: active ? null : '–', // hide dash when focused/filled
             hintStyle: TextStyle(
               color: AppColors.placeholder,
               fontSize: widget.fontSize,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/verify_email_page.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_layout.dart';
+import 'package:frontend/pages/signup/verify_email_page.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_layout.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -35,12 +35,6 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  // ==== sizing giống Login ====
-  double _fieldHeight(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final candidate = w * 0.09; // ~9% width
-    return candidate.clamp(30.0, 36.0);
-  }
 
   InputDecoration _decoration(
     String hint,
@@ -137,7 +131,7 @@ class _SignupPageState extends State<SignupPage> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (v) => validator?.call(controller.text),
       builder: (state) {
-        final fieldH = _fieldHeight(context);
+        final fieldH = AppLayout.fieldHeight(context);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
