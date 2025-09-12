@@ -121,7 +121,7 @@ class _PhoneOtpPageState extends State<PhoneOtpPage> {
 
       await Future.delayed(const Duration(milliseconds: 600));
       if (!mounted) return;
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/2', (route) => false);
     } else {
       setState(() {
         _statusText = 'Invalid verification code. Please try again.';

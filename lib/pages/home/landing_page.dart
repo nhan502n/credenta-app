@@ -15,17 +15,16 @@ class LandingPage extends StatelessWidget {
       backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Padding(
-          padding: AppLayout.pagePadding, // ✅ cùng padding với Login/Signup
+          padding: AppLayout.pagePadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Top
-              const SizedBox(height: 16), // giống tinh thần Login
+              // Top text
               Text(
                 'Begin the process of issuing verifiable credentials to users.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.85),
+                  color: AppColors.textPrimary.withOpacity(0.85),
                   fontSize: isNarrow ? 14 : 15,
                   height: 1.35,
                   decoration: TextDecoration.none,
@@ -40,7 +39,7 @@ class LandingPage extends StatelessWidget {
                 'Credenta',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: const Color(0xFFECDFCC),
+                  color: AppColors.title, // brandCream
                   fontSize: isNarrow ? 28 : 32,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.2,
@@ -52,17 +51,17 @@ class LandingPage extends StatelessWidget {
                 'Reusable digital identity',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFFDCCEBF),
+                  color: AppColors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   decoration: TextDecoration.none,
                 ),
               ),
 
-              // Đẩy nút xuống đáy nhưng KHÔNG dùng Spacer to -> dùng Expanded rỗng
+              // Đẩy nút xuống đáy
               const Expanded(child: SizedBox()),
 
-              // Khoảng cách trước CTA: dùng chung với Login
+              // Khoảng cách trước CTA
               AppLayout.gapBeforeCtaBox,
 
               // CTA 1
@@ -71,19 +70,32 @@ class LandingPage extends StatelessWidget {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     shape: MaterialStatePropertyAll(
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                     ),
                     elevation: const MaterialStatePropertyAll(0),
-                    foregroundColor: const MaterialStatePropertyAll(AppColors.ctaFg),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                      if (states.contains(MaterialState.pressed)) return AppColors.ctaBgPressed;
-                      if (states.contains(MaterialState.hovered)) return AppColors.ctaBgHover;
+                    foregroundColor:
+                        const MaterialStatePropertyAll(AppColors.ctaFg),
+                    backgroundColor:
+                        MaterialStateProperty.resolveWith<Color>((states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return AppColors.ctaBgPressed;
+                      }
+                      if (states.contains(MaterialState.hovered)) {
+                        return AppColors.ctaBgHover;
+                      }
                       return AppColors.ctaBg;
                     }),
                   ),
                   onPressed: () => Navigator.pushNamed(context, '/signup'),
-                  child: const Text('Create New Account',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                  child: const Text(
+                    'Create New Account',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
 
@@ -94,16 +106,25 @@ class LandingPage extends StatelessWidget {
                 height: 52,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.brandOrange, width: 1.6),
+                    side: const BorderSide(
+                      color: AppColors.brandOrange,
+                      width: 1.6,
+                    ),
                     foregroundColor: AppColors.brandOrange,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
                   ),
                   onPressed: () => Navigator.pushNamed(context, '/login'),
-                  child: const Text('Log In to Existing Account',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                  child: const Text(
+                    'Log In to Existing Account',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
-              // KHÔNG thêm SizedBox cuối để tránh “đội padding” so với Login
             ],
           ),
         ),

@@ -3,8 +3,10 @@ import 'package:flutter/rendering.dart'; // để tắt debug paints
 import 'package:frontend/pages/login/phone_verify_page.dart';
 import 'theme/app_theme.dart';
 import 'pages/home/landing_page.dart';
+import 'pages/home/landing_page_fake.dart';
 import 'pages/signup/signup_page.dart';
 import 'pages/login/login_page.dart';
+import 'pages/document/my_documents_page.dart';
 
 void main() {
   // TẮT mọi debug paint / baseline / pointer / repaint rainbow
@@ -28,9 +30,11 @@ class CredentaApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (_) => const LandingPage(),
+        '/2': (_) => const LandingPageFake(),
         '/signup': (_) => const SignupPage(),
         '/login': (_) => const LoginPage(),
         '/verify-phone': (_) => const PhoneVerifyPage(),
+        '/my-documents': (_) => const MyDocumentsPage(),
       },
     );
   }

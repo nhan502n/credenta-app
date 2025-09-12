@@ -11,6 +11,9 @@ environment:
 ############################
 dependencies:
   animations: ^2.0.8
+  flutter_svg: ^2.0.9
+  camera: ^0.10.5+9
+  permission_handler: ^11.3.1
   http: ^1.2.1
   flutter:
     sdk: flutter
@@ -21,6 +24,7 @@ dependencies:
 # Dev / tooling
 ############################
 dev_dependencies:
+  
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0     # Bộ lint mới, hợp Dart 3.x
@@ -39,9 +43,8 @@ flutter:
 
   # Khai báo asset khi cần (giữ folder rỗng cũng OK)
   assets:
-    - assets/images/logo.png
-
-  # Khai báo font custom khi cần
+    - assets/images/
+    - assets/icons/
   # fonts:
   #   - family: Inter
   #     fonts:
