@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // để tắt debug paints
+import 'package:frontend/pages/document/document_types_page.dart';
 import 'package:frontend/pages/login/phone_verify_page.dart';
 import 'theme/app_theme.dart';
 import 'pages/home/landing_page.dart';
@@ -35,6 +36,8 @@ class CredentaApp extends StatelessWidget {
         '/login': (_) => const LoginPage(),
         '/verify-phone': (_) => const PhoneVerifyPage(),
         '/my-documents': (_) => const MyDocumentsPage(),
+        DocumentTypesPage.route: (_) => const DocumentTypesPage(),
+        
       },
     );
   }

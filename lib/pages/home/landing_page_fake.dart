@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_layout.dart';
 import '../../theme/app_colors.dart';
+import '../document/document_types_page.dart'; // 👈 THÊM
 
-/// Temporary landing page (no token). Keep this simple to merge later.
-/// TODO(merge): Replace with real LandingPage when auth/token is ready.
 class LandingPageFake extends StatelessWidget {
   const LandingPageFake({super.key});
 
-  // Reuse the CTA style you’re already using elsewhere
   ButtonStyle _primaryCtaStyle() => ButtonStyle(
-        shape: MaterialStatePropertyAll(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        ),
-        elevation: const MaterialStatePropertyAll(0),
-        foregroundColor: const MaterialStatePropertyAll(AppColors.ctaFg),
-        backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.pressed)) return AppColors.ctaBgPressed;
-          if (states.contains(MaterialState.hovered)) return AppColors.ctaBgHover;
-          return AppColors.ctaBg;
-        }),
-      );
+    shape: MaterialStatePropertyAll(
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+    ),
+    elevation: const MaterialStatePropertyAll(0),
+    foregroundColor: const MaterialStatePropertyAll(AppColors.ctaFg),
+    backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+      if (states.contains(MaterialState.pressed)) return AppColors.ctaBgPressed;
+      if (states.contains(MaterialState.hovered)) return AppColors.ctaBgHover;
+      return AppColors.ctaBg;
+    }),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isNarrow = width < 380;
+    final isNarrow = MediaQuery.of(context).size.width < 380;
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -34,15 +31,11 @@ class LandingPageFake extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Top-right link "My document"
               Row(
                 children: [
                   const Spacer(),
                   TextButton(
-                    onPressed: () {
-                      // TODO(route): navigate to your documents list page
-                      Navigator.pushNamed(context, '/my-documents');
-                    },
+                    onPressed: () => Navigator.pushNamed(context, '/my-documents'),
                     style: TextButton.styleFrom(
                       foregroundColor: AppColors.brandOrange,
                       padding: EdgeInsets.zero,
@@ -54,7 +47,6 @@ class LandingPageFake extends StatelessWidget {
                 ],
               ),
 
-              // Center title
               const Spacer(),
               Text(
                 'App Dashboard',
@@ -69,17 +61,23 @@ class LandingPageFake extends StatelessWidget {
               ),
               const Spacer(),
 
-              // Spacing before CTAs (shared)
               AppLayout.gapBeforeCtaBox,
 
-              // Primary CTA: Register new document
               SizedBox(
                 height: 52,
                 child: ElevatedButton(
                   style: _primaryCtaStyle(),
                   onPressed: () {
-                    // TODO(route): navigate to register/new document flow
-                    Navigator.pushNamed(context, '/register-document');
+                    // 1) Clear stack và đưa MyDocuments lên
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/my-documents',
+                      (_) => false,
+                    );
+                    // 2) Đẩy DocumentTypes lên trên MyDocuments (giống _onAskYes)
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.pushNamed(context, DocumentTypesPage.route);
+                    });
                   },
                   child: const Text(
                     'Register new document',
@@ -90,7 +88,6 @@ class LandingPageFake extends StatelessWidget {
 
               AppLayout.gapLG,
 
-              // Secondary CTA: Log out (outlined)
               SizedBox(
                 height: 52,
                 child: OutlinedButton(
@@ -102,16 +99,12 @@ class LandingPageFake extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // TODO(auth): clear temp session then go to login/landing
-                    Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
                   },
-                  child: const Text(
-                    'Log out',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
-                  ),
+                  child: const Text('Log out',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
                 ),
               ),
-              // No extra bottom spacer to keep same visual padding as other pages
             ],
           ),
         ),

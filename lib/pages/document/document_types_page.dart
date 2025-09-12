@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_layout.dart';
-import 'document_scan_page.dart'; // 👈 import trang đích
+import 'document_scan_page.dart';
 
 class DocumentTypesPage extends StatelessWidget {
   const DocumentTypesPage({super.key});
+
+  /// Route name dùng thống nhất toàn app
+  static const route = '/register-document/types';
+
+  /// Dùng khi muốn push bằng MaterialPageRoute nhưng vẫn gắn name
+  static Route<void> materialRoute() => MaterialPageRoute(
+        settings: const RouteSettings(name: route),
+        builder: (_) => const DocumentTypesPage(),
+      );
 
   static const _types = <String>[
     'Passport',
@@ -21,8 +30,7 @@ class DocumentTypesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isNarrow = width < 380;
+    final isNarrow = MediaQuery.of(context).size.width < 380;
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -38,14 +46,12 @@ class DocumentTypesPage extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Center(
-                      child: Text(
-                        'Document types',
-                        style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: isNarrow ? 20 : 22,
-                          fontWeight: FontWeight.w800,
-                        ),
+                    Text(
+                      'Document types',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: isNarrow ? 20 : 22,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                     Align(
@@ -53,8 +59,10 @@ class DocumentTypesPage extends StatelessWidget {
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints.tightFor(width: 38, height: 38),
-                        icon: const Icon(Icons.close, color: AppColors.brandOrange, size: 20),
+                        constraints:
+                            const BoxConstraints.tightFor(width: 38, height: 38),
+                        icon: const Icon(Icons.close,
+                            color: AppColors.brandOrange, size: 20),
                       ),
                     ),
                   ],
@@ -77,7 +85,7 @@ class DocumentTypesPage extends StatelessWidget {
                     final label = _types[i];
                     return InkWell(
                       onTap: () {
-                        // 👉 Điều hướng sang trang scan
+                        // Điều hướng sang trang scan
                         Navigator.push(
                           context,
                           MaterialPageRoute(
