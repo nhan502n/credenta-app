@@ -468,8 +468,7 @@ class _ErrorHelp extends StatelessWidget {
           AppLayout.gapLG,
           if (isWeb)
             const Text(
-              'Tip (Web):\n• Chạy trên HTTPS hoặc localhost\n'
-              '• Nếu từng bấm Block, click ổ khóa cạnh URL → Site settings → Camera: Allow → Reload',
+              'it is not supported to access camera on web.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white70, height: 1.4),
             ),
